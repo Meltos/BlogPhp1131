@@ -1,0 +1,37 @@
+{% extends '/front-end/main.twig' %}
+{% block title %}
+    {{ article.title }}
+{% endblock %}
+{% block nav %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brown fixed-top">
+        <a class="navbar-brand text-uppercase h5">Главная</a>
+        <button class="navbar-toggler" data-target="#my-nav" data-toggle="collapse" aria-controls="my-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="my-nav" class="collapse navbar-collapse justify-content-center">
+            <ul id="navigation" class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link h5 text-uppercase li-hidden" href="\">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link h5 text-uppercase">Первая</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link h5 text-uppercase">Вторая</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+    {% block categories %}
+        {% for category in category_list %}
+            <div class="item-brown">
+                <li class="nav-item">
+                    <a class="nav-link h6" href="\category\{{ category.id }}">{{ category.title }}</a>
+                </li>
+            </div>
+        {% endfor %}
+    {% endblock %}
+    {% block content %}
+        {{ article.text }}
+    {% endblock %}

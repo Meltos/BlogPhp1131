@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="vorobyovPhp@192.168.200.13" uuid="24f6e2c6-0968-49b1-9057-c25ca14ae25b">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://192.168.200.13:3306/vorobyovPhp</jdbc-url>
+    </data-source>
+  </component>
+</project>

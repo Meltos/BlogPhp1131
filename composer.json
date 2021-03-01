@@ -1,0 +1,22 @@
+{
+    "name": "user/startbootstrap",
+    "require": {
+        "twig/twig": "^3.2",
+        "noahbuscher/macaw": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\" : "app/",
+            "Core\\": "core/",
+            "Controller\\": "app/controller/",
+            "Model\\": "app/model/",
+            "View\\": "app/view/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Meltos",
+            "email": "meltossovikov753@gmail.com"
+        }
+    ]
+}

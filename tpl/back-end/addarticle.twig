@@ -1,0 +1,186 @@
+{% extends '/back-end/admin.twig' %}
+{% block scripts %}
+    <script src="/tpl/back-end/assets/ckeditor/ckeditor.js"></script>
+    <style type="text/css">
+        .fm-modal {
+            z-index: 10011; /** Because CKEditor image dialog was at 10010 */
+            width:80%;
+            height:80%;
+            top: 10%;
+            left:10%;
+            border:0;
+            position:fixed;
+            -moz-box-shadow: 0px 1px 5px 0px #656565;
+            -webkit-box-shadow: 0px 1px 5px 0px #656565;
+            -o-box-shadow: 0px 1px 5px 0px #656565;
+            box-shadow: 0px 1px 5px 0px #656565;
+            filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=180, Strength=5);
+        }
+    </style>
+{% endblock %}
+{% block main %}
+
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">{% block title1 %}Создание статьи{% endblock %}</h3></div>
+                    {% block form %}
+                        <div class="card-body">
+                            <form action="/admin/article/add" method="post">
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputTitle">Название</label>
+                                    <input name="title" class="form-control py-4" id="inputTitle" type="text" placeholder="Введите название статьи"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Выберите изоброжение для статьи</label>
+                                    <div id="picture">
+                                    </div>
+                                    <div class="button-group">
+                                        <input type="text" id="id_of_the_target_input" placeholder="Image Url" readonly name="img"/>
+                                        <button type="button" class="browse" onclick="BrowseServer('id_of_the_target_input');"> Выбрать изображение</button>
+                                    </div>
+                                    <script type="text/javascript">
+                                        // File Picker modification for FCK Editor v2.0 - www.fckeditor.net
+                                        // by: Pete Forde <pete@unspace.ca> @ Unspace Interactive
+                                        var urlobj;
+
+                                        function BrowseServer(obj)
+                                        {
+                                            urlobj = obj;
+                                            OpenServerBrowser(
+                                                '/tpl/back-end/assets/fm/index.html',
+                                                screen.width * 0.7,
+                                                screen.height * 0.7 ) ;
+                                        }
+
+                                        function OpenServerBrowser( url, width, height )
+                                        {
+                                            var iLeft = (screen.width - width) / 2 ;
+                                            var iTop = (screen.height - height) / 2 ;
+                                            var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
+                                            sOptions += ",width=" + width ;
+                                            sOptions += ",height=" + height ;
+                                            sOptions += ",left=" + iLeft ;
+                                            sOptions += ",top=" + iTop ;
+                                            var oWindow = window.open( url, "BrowseWindow", sOptions ) ;
+                                        }
+
+                                        function SetUrl( url, width, height, alt )
+                                        {
+                                            document.getElementById(urlobj).value = url ;
+                                            oWindow = null;
+                                        }
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputCategory">Категория</label>
+                                    <select name="category" class="width-all" id="inputImg">
+                                        {% for category in category_list %}
+                                            <option value="{{ category.id }}">{{ category.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputDes">Описание</label>
+                                    <textarea cols="80" id="editor1" name="des" rows="10">
+                                                    <p>Здесь пока ничего нет.</p>
+		                                        </textarea>
+                                    <script>
+                                        CKEDITOR.replace( 'editor1', {
+                                            customConfig: '/tpl/back-end/assets/ckeditor/config2.js'
+                                        });
+
+
+
+                                        CKEDITOR.on('dialogDefinition', function (event)
+                                        {
+                                            var editor = event.editor;
+                                            var dialogDefinition = event.data.definition;
+                                            var dialogName = event.data.name;
+
+                                            var cleanUpFuncRef = CKEDITOR.tools.addFunction(function ()
+                                            {
+                                                // Do the clean-up of filemanager here (called when an image was selected or cancel was clicked)
+                                                $('#filemanager_iframe').remove();
+                                                $("body").css("overflow-y", "scroll");
+                                            });
+
+                                            var tabCount = dialogDefinition.contents.length;
+                                            for (var i = 0; i < tabCount; i++) {
+                                                var browseButton = dialogDefinition.contents[i].get('browse');
+
+                                                if (browseButton !== null) {
+                                                    browseButton.hidden = false;
+                                                    browseButton.onClick = function (dialog, i)
+                                                    {
+                                                        editor._.filebrowserSe = this;
+                                                        var iframe = $("<iframe id='filemanager_iframe' class='fm-modal'/>").attr({
+                                                            src: '/tpl/back-end/assets/fm/index.html' + // Change it to wherever  Filemanager is stored.
+                                                                '?CKEditorFuncNum=' + CKEDITOR.instances[event.editor.name]._.filebrowserFn +
+                                                                '&CKEditorCleanUpFuncNum=' + cleanUpFuncRef +
+                                                                '&langCode=en' +
+                                                                '&CKEditor=' + event.editor.name
+                                                        });
+
+                                                        $("body").append(iframe);
+                                                        $("body").css("overflow-y", "hidden");  // Get rid of possible scrollbars in containing document
+                                                    }
+                                                }
+                                            }
+                                        }); // dialogDefinition
+                                    </script>
+                                </div>
+                                <div class="form-group">
+                                    <label class="small mb-1" for="inputDes">Html разметка статьи</label>
+                                    <textarea cols="80" id="editor2" name="html" rows="10">
+                                                    <p>Здесь пока ничего нет.</p>
+		                                        </textarea>
+                                    <script>
+                                        CKEDITOR.replace('editor2');
+
+
+                                        CKEDITOR.on('dialogDefinition', function (event)
+                                        {
+                                            var editor = event.editor;
+                                            var dialogDefinition = event.data.definition;
+                                            var dialogName = event.data.name;
+
+                                            var cleanUpFuncRef = CKEDITOR.tools.addFunction(function ()
+                                            {
+                                                // Do the clean-up of filemanager here (called when an image was selected or cancel was clicked)
+                                                $('#filemanager_iframe').remove();
+                                                $("body").css("overflow-y", "scroll");
+                                            });
+
+                                            var tabCount = dialogDefinition.contents.length;
+                                            for (var i = 0; i < tabCount; i++) {
+                                                var browseButton = dialogDefinition.contents[i].get('browse');
+
+                                                if (browseButton !== null) {
+                                                    browseButton.hidden = false;
+                                                    browseButton.onClick = function (dialog, i)
+                                                    {
+                                                        editor._.filebrowserSe = this;
+                                                        var iframe = $("<iframe id='filemanager_iframe' class='fm-modal'/>").attr({
+                                                            src: '/tpl/back-end/assets/fm/index.html' + // Change it to wherever  Filemanager is stored.
+                                                                '?CKEditorFuncNum=' + CKEDITOR.instances[event.editor.name]._.filebrowserFn +
+                                                                '&CKEditorCleanUpFuncNum=' + cleanUpFuncRef +
+                                                                '&langCode=en' +
+                                                                '&CKEditor=' + event.editor.name
+                                                        });
+
+                                                        $("body").append(iframe);
+                                                        $("body").css("overflow-y", "hidden");  // Get rid of possible scrollbars in containing document
+                                                    }
+                                                }
+                                            }
+                                        }); // dialogDefinition
+                                    </script>
+                                </div>
+                                <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                                    <input type="submit" class="btn btn-primary" name="btnAdd" value="Создать">
+                                </div>
+                            </form>
+                        </div>
+                    {% endblock %}
+                    <div class="card-footer text-center">
+                        <div class="small"><a href="/admin">Вернутся назад</a></div>
+                    </div>
+{% endblock %}
